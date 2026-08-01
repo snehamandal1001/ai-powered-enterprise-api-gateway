@@ -19,6 +19,14 @@ spring:
           predicates:
             - Path=/api/orders/**
 
+# Used to sign and verify JWT tokens.
+# This one is fine for learning/local use. If this ever becomes a
+# real public project, generate a new one and load it from an
+# environment variable instead of committing it to Git.
+jwt:
+  secret: e1UcqvfDzCtbO76rwrMdR0drStNi6Vg0OAvXZzsfebk=
+  expiration-ms: 3600000  # 1 hour
+
 management:
   endpoints:
     web:
