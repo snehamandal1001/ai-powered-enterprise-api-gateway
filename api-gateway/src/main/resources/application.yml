@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: api-gateway
+  data:
+    redis:
+      host: localhost
+      port: 6380
   cloud:
     gateway:
       routes:
@@ -12,12 +16,24 @@ spring:
           uri: http://localhost:8081
           predicates:
             - Path=/api/products/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5   # tokens added per second
+                redis-rate-limiter.burstCapacity: 10  # max tokens a client can save up
+                key-resolver: "#{@clientIpKeyResolver}"
 
         # Any request starting with /api/orders goes to order-service
         - id: order-service-route
           uri: http://localhost:8082
           predicates:
             - Path=/api/orders/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@clientIpKeyResolver}"
 
 # Used to sign and verify JWT tokens.
 # This one is fine for learning/local use. If this ever becomes a
