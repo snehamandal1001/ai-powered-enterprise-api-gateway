@@ -17,6 +17,13 @@ spring:
       hibernate:
         format_sql: true
 
+# The AI query endpoint needs a real Anthropic API key to work.
+# We read it from an environment variable so it's never committed
+# to Git by accident. Get a key at https://console.anthropic.com
+anthropic:
+  api-key: ${ANTHROPIC_API_KEY:}
+  model: claude-haiku-4-5-20251001
+
 management:
   endpoints:
     web:
