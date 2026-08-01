@@ -75,6 +75,11 @@ public class AiQueryService {
                     .block();
 
             return extractAnswerText(rawResponse);
+        } catch (org.springframework.web.reactive.function.client.WebClientResponseException ex) {
+            // This branch shows us EXACTLY what Anthropic didn't like about
+            // our request, instead of a generic "400 Bad Request" message.
+            return "AI service rejected the request: " + ex.getStatusCode()
+                    + " - " + ex.getResponseBodyAsString();
         } catch (Exception ex) {
             return "Could not reach the AI service: " + ex.getMessage();
         }
